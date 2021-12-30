@@ -1,25 +1,4 @@
-{ "rules": {
-"user": {
-".read": "auth!=null",
-"$uid":{
-        ".write":"$uid===auth.uid"
-}
-},
-"quality":{
-".read": true,
-".write": false
-},
-"profession":{
-".read": true,
-".write": false
-},
-"comment":{
-".read": "auth!=null",
-".write": true,
-".indexOn": ["pageId"]
-},
-},
-}
+
 
 # Getting Started with Create React App
 

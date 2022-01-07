@@ -8,15 +8,20 @@ import RadioField from "../../common/form/radio.Field";
 import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
 import { useProfessions } from "../../../hooks/useProfession";
-import { useQualities } from "../../../hooks/useQualities";
-
+import { useSelector } from "react-redux";
 import { useAuth } from "../../../hooks/useAuth";
+import {
+    getQualities,
+    getQualitiesLoadingStatus
+} from "../../../store/qualities";
 
 const EditUserPage = () => {
     const { currentUser, updateUser } = useAuth();
 
     const [data, setData] = useState({});
-    const { qualities, getQuality, isLoading } = useQualities();
+
+    const qualities = useSelector(getQualities());
+    const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
 
     const qualitiesList = qualities.map((q) => ({
         label: q.name,
@@ -49,11 +54,11 @@ const EditUserPage = () => {
     // };
     useEffect(() => {
         const getQualitiesById = (qualitiesId) => {
-            const qualities = qualitiesId.map((q) => getQuality(q));
+            const qualities = qualitiesId.map((q) => getQualities(q));
             return qualities.map((q) => ({ label: q.name, value: q._id }));
         };
 
-        if (!isLoading) {
+        if (!qualitiesLoading) {
             setData({
                 ...currentUser,
                 qualities: getQualitiesById(currentUser.qualities)
@@ -69,7 +74,7 @@ const EditUserPage = () => {
         //     );
         //     api.qualities.fetchAll().then((data) => setQualities(data));
         //     api.professions.fetchAll().then((data) => setProfession(data));
-    }, [isLoading]);
+    }, [qualitiesLoading]);
 
     // useEffect(() => {
     //     if (data?._id) console.log("data_quality:", data);
@@ -127,7 +132,7 @@ const EditUserPage = () => {
             <BackHistoryButton />
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
-                    {!isLoading ? (
+                    {!qualitiesLoading ? (
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 label="Имя"
